@@ -7,7 +7,6 @@
 #include <assimp/postprocess.h>
 
 #include <filesystem>
-#include <vector>
 
 #include "mesh.hpp"
 #include "primitives.hpp"
@@ -21,13 +20,11 @@ class Model {
 public:
     using path = std::experimental::filesystem::path;
 
-    Textures textures;
-    Meshes meshes;
-    path directory;
-
     Model(const path& path);
 
     void render(const Shader& shader) const;
+    path directory;
+
 private:
     void load_model(const path& path);
 
@@ -35,6 +32,9 @@ private:
     Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
 
     Textures load_material(aiMaterial* material, aiTextureType type, texture_type t_type);
+
+    TextureCache textures;
+    Meshes meshes;
 };
 
 GLuint load_texture(const std::experimental::filesystem::path& path);

@@ -51,7 +51,6 @@ Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
     Indices indices;
     Textures textures;
 
-
     for (std::size_t i = 0; i < mesh->mNumVertices; ++i) {
         Vertex vertex;
         glm::vec3 vec;
@@ -107,25 +106,17 @@ Textures Model::load_material(aiMaterial* material, aiTextureType type, texture_
         aiString str;
         material->GetTexture(type, (std::uint32_t)i, &str);
 
-        bool skip = false;
-        for (std::size_t j = 0; j < textures.size(); j++) {
-            if (std::strcmp(textures[j].path.c_str(), str.C_Str()) == 0) {
-                textures_tmp.push_back(textures[j]);
-                skip = true;
-                break;
-            }
-        }
-
-        if (!skip) {
-            Texture texture;
-
+        Texture texture;
+        if (auto&& it = textures.find(str.C_Str()); it == textures.end()) {
             texture.id = load_texture(directory / str.C_Str());
             texture.type = t_type;
-            texture.path = str.C_Str();
             textures_tmp.push_back(texture);
-
-            textures.push_back(texture);
         }
+        else {
+            texture = it->second;
+        }
+
+        textures_tmp.push_back(texture);
     }
 
 

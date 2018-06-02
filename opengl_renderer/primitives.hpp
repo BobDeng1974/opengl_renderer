@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 
@@ -24,12 +26,12 @@ enum class texture_type {
 struct Texture {
     GLuint id;
     texture_type type;
-    std::string path;
 };
 
 
 using Vertices = std::vector<Vertex>;
 using Indices = std::vector<GLuint>;
 using Textures = std::vector<Texture>;
+using TextureCache = std::unordered_map<std::string, Texture>;
 
 } // namespace opengl
