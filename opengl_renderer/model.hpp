@@ -27,7 +27,7 @@ public:
 
     Model(const path& path);
 
-    void render(const Shader& shader) const ;
+    void render(const Shader& shader) const;
 private:
     void load_model(const path& path);
 

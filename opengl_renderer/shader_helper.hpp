@@ -14,14 +14,14 @@ template <GLuint Type>
 GLuint compile_shader(const std::string& source);
 
 template <GLuint Type, class Shader>
-GLuint create_shader(const Shader& path);
+GLuint create_shader(Shader&& path);
 
 
 template <GLuint... Types, class... Shaders>
-GLuint compile_shaders(const Shaders&... shader_paths) {
+GLuint compile_shaders(Shaders&&... shader_paths) {
     auto program = glCreateProgram();
 
-    auto shaders = { create_shader<Types>(shader_paths)... };
+    auto shaders = { create_shader<Types>(std::forward<Shaders>(shader_paths))... };
 
     for (auto& shader : shaders) {
         glAttachShader(program, shader);
@@ -39,8 +39,8 @@ GLuint compile_shaders(const Shaders&... shader_paths) {
 
 
 template <GLuint Type, class Shader>
-GLuint create_shader(const Shader& path) {
-    std::ifstream file(path);
+GLuint create_shader(Shader&& path) {
+    std::ifstream file(std::forward<Shader>(path));
     std::string shader;
 
     file.seekg(0, std::ios::end);
