@@ -76,7 +76,7 @@ Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
             vertex.tex_coords = glm::vec2(0.0f, 0.0f);
         }
 
-        vertices.push_back(vertex);
+        vertices.push_back(std::move(vertex));
     }
 
 
