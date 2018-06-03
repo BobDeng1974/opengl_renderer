@@ -43,15 +43,15 @@ void Mesh::render(const Shader& shader) const {
     for (std::size_t i = 0; i < textures.size(); ++i) {
         glActiveTexture(GL_TEXTURE0 + (GLenum)i);
 
-        std::string u_texture;
-
-        switch (textures[i].type) {
-        case texture_type::specular:
-            u_texture = "u_texture_specular_" + std::to_string(specular_n++); break;
-        case texture_type::diffuse: [[fallthrough]];
-        default:
-            u_texture = "u_texture_diffuse_" + std::to_string(diffuse_n++); break;
-        }
+        const std::string u_texture = [&] {
+            switch (textures[i].type) {
+            case texture_type::specular:
+                return "u_texture_specular_" + std::to_string(specular_n++); break;
+            case texture_type::diffuse: [[fallthrough]];
+            default:
+                return "u_texture_diffuse_" + std::to_string(diffuse_n++); break;
+            }
+        }();
 
 
         glUniform1i(shader.uniform(u_texture), (GLint)i);
