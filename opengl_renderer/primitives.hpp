@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
+#include <cstddef>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -18,7 +19,7 @@ struct Vertex {
 };
 
 
-enum class texture_type {
+enum class texture_type : std::uint8_t {
     diffuse,
     specular
 };
