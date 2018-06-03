@@ -9,8 +9,8 @@
 namespace opengl {
 
 
-Model::Model(const path& path) {
-    load_model(path);
+Model::Model(path&& path) {
+    load_model(std::forward<decltype(path)>(path));
 }
 
 void Model::render(const Shader& shader) const {
@@ -19,7 +19,7 @@ void Model::render(const Shader& shader) const {
     }
 }
 
-void Model::load_model(const path& path) {
+void Model::load_model(path&& path) {
     Assimp::Importer importer;
 
     const aiScene* scene = importer.ReadFile(path.string(), aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);

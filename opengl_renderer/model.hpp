@@ -20,13 +20,13 @@ class Model {
 public:
     using path = std::experimental::filesystem::path;
 
-    Model(const path& path);
+    Model(path&& path);
 
     void render(const Shader& shader) const;
     path directory;
 
 private:
-    void load_model(const path& path);
+    void load_model(path&& path);
 
     void process_node(aiNode* node, const aiScene* scene);
     Mesh process_mesh(aiMesh* mesh, const aiScene* scene);
