@@ -69,7 +69,7 @@ int opengl::scenes::inquisitor_skull() {
     };
 
 
-    fs::path resources = "resources";
+    const fs::path resources = "resources";
 
     auto skull_shader = gl::Shader::create<GL_VERTEX_SHADER, GL_FRAGMENT_SHADER>(
             resources / "shaders" / "vertex.glsl",
