@@ -6,10 +6,10 @@
 namespace opengl {
 
 
-Mesh::Mesh(const Vertices& vertices, const Indices& indices, const Textures& textures)
-    : vertices(vertices),
-      indices(indices),
-      textures(textures)
+Mesh::Mesh(Vertices&& vertices, Indices&& indices, Textures&& textures)
+    : vertices{vertices},
+      indices{indices},
+      textures{textures}
 {
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);

@@ -18,7 +18,7 @@ public:
 
     GLuint vao;
 
-    Mesh(const Vertices& vertices, const Indices& indices, const Textures& textures);
+    Mesh(Vertices&& vertices, Indices&& indices, Textures&& textures);
 
     void render(const Shader& shader) const;
 
