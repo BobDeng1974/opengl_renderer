@@ -158,14 +158,17 @@ int opengl::scenes::inquisitor_skull() {
 
     const glm::mat4 projection = glm::perspective(45.f, (GLfloat)context.width / (GLfloat)context.height, .1f, 100.f);
 
-    GLdouble last_time = glfwGetTime();
+
+    GLfloat last_time = (GLfloat)glfwGetTime();
     std::size_t frame_count = 0;
 
+    GLfloat shift = glm::two_pi<float>() / lighting.size;
+
     context.loop([&](GLfloat dt) {
-        GLdouble current_time = glfwGetTime();
+        GLfloat current_time = (GLfloat)glfwGetTime();
         ++frame_count;
 
-        if (current_time - last_time >= 1.) {
+        if (current_time - last_time >= 1.f) {
             std::cout << '\r' << frame_count << " FPS";
             frame_count = 0;
             last_time = current_time;
@@ -177,17 +180,13 @@ int opengl::scenes::inquisitor_skull() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        GLfloat time = (GLfloat)glfwGetTime();
-        GLfloat shift = glm::two_pi<float>() / lighting.size;
-
         skull_shader->use();
-
 
         for (std::size_t i = 0; i < lighting.size; ++i) {
             lighting.lights[i].position = glm::vec3(
-                glm::sin(time * .7f + shift * i) * ligth_distance,
+                glm::sin(current_time * .7f + shift * i) * ligth_distance,
                 .4f,
-                glm::cos(time * .7f + shift * i) * ligth_distance
+                glm::cos(current_time * .7f + shift * i) * ligth_distance
             );
 
             glUniform3fv(lighting.lights[i].location, 1, glm::value_ptr(lighting.lights[i].position));
