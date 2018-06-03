@@ -87,7 +87,7 @@ Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
     for (std::size_t i = 0; i < mesh->mNumFaces; ++i) {
         aiFace face = mesh->mFaces[i];
 
-        for (std::size_t j = 0; j < face.mNumIndices; j++) {
+        for (std::size_t j = 0; j < face.mNumIndices; ++j) {
             indices.push_back(face.mIndices[j]);
         }
     }
@@ -108,7 +108,7 @@ Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
 Textures Model::load_material(aiMaterial* material, aiTextureType type, texture_type t_type) {
     Textures textures_tmp;
 
-    for (std::size_t i = 0; i < material->GetTextureCount(type); i++) {
+    for (std::size_t i = 0; i < material->GetTextureCount(type); ++i) {
         aiString str;
         material->GetTexture(type, (std::uint32_t)i, &str);
 
