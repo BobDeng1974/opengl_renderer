@@ -25,9 +25,9 @@ struct Controller {
     static glm::dvec2 cursor;
     static Skulls skulls;
 
-    static void update_camera(GLfloat dt);
+    static void update_camera(GLfloat dt) noexcept;
+    static void mouse_callback(GLFWwindow* window, double x, double y) noexcept;
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-    static void mouse_callback(GLFWwindow* window, double x, double y);
 };
 
 } // namespace opengl::scenes

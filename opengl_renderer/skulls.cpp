@@ -4,7 +4,7 @@
 namespace opengl::scenes {
 
 
-std::shared_ptr<opengl::Model> Skulls::current_model() const {
+std::shared_ptr<opengl::Model> Skulls::current_model() const noexcept {
     return model[current];
 }
 

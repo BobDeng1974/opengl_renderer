@@ -12,7 +12,7 @@ glm::dvec2 Controller::cursor;
 Skulls Controller::skulls;
 
 
-void Controller::update_camera(GLfloat dt) {
+void Controller::update_camera(GLfloat dt) noexcept {
     GLfloat speed = 1.f * dt;
 
     if (keys[GLFW_KEY_W]) { camera.pos += speed * camera.front; }
@@ -22,7 +22,7 @@ void Controller::update_camera(GLfloat dt) {
 }
 
 
-void Controller::mouse_callback(GLFWwindow * window, double x, double y) {
+void Controller::mouse_callback(GLFWwindow * window, double x, double y) noexcept {
     static GLdouble yaw = -glm::half_pi<float>();
     static GLdouble pitch = .0f;
 

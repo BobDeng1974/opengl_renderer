@@ -22,7 +22,7 @@ public:
     std::shared_ptr<opengl::Shader> shader;
     GLuint mat_location = 0, mat_it_location = 0;
 
-    std::shared_ptr<opengl::Model> current_model() const;
+    std::shared_ptr<opengl::Model> current_model() const noexcept;
 
     void swap();
 

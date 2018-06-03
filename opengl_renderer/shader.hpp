@@ -28,7 +28,7 @@ public:
 
 
     void use() const;
-    GLuint uniform(const std::string& name) const;
+    GLuint uniform(const std::string& name) const noexcept;
 
     const GLuint program;
 
