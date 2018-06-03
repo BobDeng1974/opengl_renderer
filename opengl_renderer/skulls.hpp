@@ -15,14 +15,14 @@ namespace opengl::scenes {
 
 class Skulls {
 public:
-    std::array<std::shared_ptr<opengl::Model>, 2> model;
-    std::array<std::shared_ptr<glm::mat4>, 2> model_mat;
-    std::array<std::shared_ptr<glm::mat3>, 2> model_mat_it;
+    std::array<std::unique_ptr<opengl::Model>, 2> model;
+    std::array<std::unique_ptr<glm::mat4>, 2> model_mat;
+    std::array<std::unique_ptr<glm::mat3>, 2> model_mat_it;
 
     std::shared_ptr<opengl::Shader> shader;
     GLuint mat_location = 0, mat_it_location = 0;
 
-    std::shared_ptr<opengl::Model> current_model() const noexcept;
+    const opengl::Model* current_model() const noexcept;
 
     void swap();
 

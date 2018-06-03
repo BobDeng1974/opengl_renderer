@@ -82,15 +82,15 @@ int opengl::scenes::inquisitor_skull() {
     );
 
     
-    auto inquisitor = std::make_shared<gl::Model>(
+    auto inquisitor = std::make_unique<gl::Model>(
         resources / "models" / "lord_inquisitor_servo_skull" / "scene.gltf"
     );
 
-    auto salazar = std::make_shared<gl::Model>(
+    auto salazar = std::make_unique<gl::Model>(
         resources / "models" / "skull_salazar_downloadable" / "scene.gltf"
     );
 
-    auto lamp = std::make_shared<gl::Model>(
+    auto lamp = std::make_unique<gl::Model>(
         resources / "models" / "truncated_octahedron" / "scene.gltf"
     );
 
@@ -122,18 +122,18 @@ int opengl::scenes::inquisitor_skull() {
     };
 
 
-    Controller::skulls.model = { inquisitor, salazar };
+    Controller::skulls.model = { std::move(inquisitor), std::move(salazar) };
     Controller::skulls.model_mat = {
-        std::make_shared<glm::mat4>(
+        std::make_unique<glm::mat4>(
             glm::scale(glm::mat4(), glm::vec3(.01f, .01f, .01f))
         ),
-        std::make_shared<glm::mat4>(
+        std::make_unique<glm::mat4>(
             glm::scale(glm::rotate(glm::mat4(), glm::radians(15.f), glm::vec3(1.f, .0f, .0f)), glm::vec3(.6f, .6f, .6f))
         )
     };
     Controller::skulls.model_mat_it = {
-        std::make_shared<glm::mat3>(glm::transpose(glm::inverse(*Controller::skulls.model_mat[0]))),
-        std::make_shared<glm::mat3>(glm::transpose(glm::inverse(*Controller::skulls.model_mat[1]))),
+        std::make_unique<glm::mat3>(glm::transpose(glm::inverse(*Controller::skulls.model_mat[0]))),
+        std::make_unique<glm::mat3>(glm::transpose(glm::inverse(*Controller::skulls.model_mat[1]))),
     };
     Controller::skulls.shader = skull_shader;
     Controller::skulls.mat_location = skull_shader->uniform("u_model");
