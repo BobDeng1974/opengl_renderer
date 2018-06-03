@@ -14,6 +14,7 @@
 #include <string>
 
 #include "context.hpp"
+#include "lighting.hpp"
 #include "model.hpp"
 #include "shader.hpp"
 
@@ -68,22 +69,6 @@ int opengl::scenes::inquisitor_skull() {
     };
 
 
-    GLfloat ligth_distance = 0.7f;
-
-    std::vector<glm::vec3> light_positions(4);
-
-    std::vector<glm::vec3> light_colors = {
-        glm::vec3(1.f, .0f, .0f),
-        glm::vec3(.0f, 1.f, .0f),
-        glm::vec3(.0f, .0f, 1.f),
-        glm::vec3(1.f, 1.f, 1.f)
-    };
-
-    GLfloat ambient = .05f;
-    GLfloat diffuse = .8f;
-    GLfloat specular = 1.f;
-
-
     fs::path resources = "resources";
 
     auto skull_shader = gl::Shader::create<GL_VERTEX_SHADER, GL_FRAGMENT_SHADER>(
@@ -112,6 +97,31 @@ int opengl::scenes::inquisitor_skull() {
 
     skull_shader->use();
 
+
+    GLfloat ligth_distance = 0.7f;
+
+    GLfloat ambient = .05f;
+    GLfloat diffuse = .8f;
+    GLfloat specular = 1.f;
+    GLfloat constant = 1.f;
+    GLfloat linear = .09f;
+    GLfloat quadratic = .032f;
+
+    Lighting<4> lighting = { {{
+            { glm::vec3(), glm::vec3(1.f, .0f, .0f), skull_shader->uniform("u_light[0].position") },
+            { glm::vec3(), glm::vec3(.0f, 1.f, .0f), skull_shader->uniform("u_light[1].position") },
+            { glm::vec3(), glm::vec3(.0f, .0f, 1.f), skull_shader->uniform("u_light[2].position") },
+            { glm::vec3(), glm::vec3(1.f, 1.f, 1.f), skull_shader->uniform("u_light[3].position") },
+        }}, 
+
+        { constant, linear, quadratic },
+
+        ambient,
+        diffuse,
+        specular
+    };
+
+
     Controller::skulls.model = { inquisitor, salazar };
     Controller::skulls.model_mat = {
         std::make_shared<glm::mat4>(
@@ -130,18 +140,17 @@ int opengl::scenes::inquisitor_skull() {
     Controller::skulls.mat_it_location = skull_shader->uniform("u_model_it");
 
 
-    glUniform1ui(skull_shader->uniform("u_light_n"), (GLuint)light_positions.size());
-    for (std::size_t i = 0; i < light_positions.size(); ++i) {
-        auto light = "u_light["s + std::to_string(i) + "]"s;
+    glUniform1ui(skull_shader->uniform("u_light_n"), (GLuint)lighting.size);
 
-        glUniform3fv(skull_shader->uniform(light + ".position"s), 1, glm::value_ptr(light_positions[i]));
+    for (std::size_t i = 0; i < lighting.size; ++i) {
+        const auto location = "u_light[" + std::to_string(i) + "]";
 
-        glUniform3fv(skull_shader->uniform(light + ".ambient"s),   1, glm::value_ptr(light_colors[i] * ambient));
-        glUniform3fv(skull_shader->uniform(light + ".diffuse"s),   1, glm::value_ptr(light_colors[i] * diffuse));
-        glUniform3fv(skull_shader->uniform(light + ".specular"s),  1, glm::value_ptr(light_colors[i] * specular));
-        glUniform1f( skull_shader->uniform(light + ".constant"s),  1.0f);
-        glUniform1f( skull_shader->uniform(light + ".linear"s),    0.09f);
-        glUniform1f( skull_shader->uniform(light + ".quadratic"s), 0.032f);
+        glUniform3fv(skull_shader->uniform(location + ".ambient"s),   1, glm::value_ptr(lighting.lights[i].color * lighting.ambient));
+        glUniform3fv(skull_shader->uniform(location + ".diffuse"s),   1, glm::value_ptr(lighting.lights[i].color * lighting.diffuse));
+        glUniform3fv(skull_shader->uniform(location + ".specular"s),  1, glm::value_ptr(lighting.lights[i].color * lighting.specular));
+        glUniform1f( skull_shader->uniform(location + ".constant"s),  lighting.attenuation.constant);
+        glUniform1f( skull_shader->uniform(location + ".linear"s),    lighting.attenuation.linear);
+        glUniform1f( skull_shader->uniform(location + ".quadratic"s), lighting.attenuation.quadratic);
     }
 
     glUniformMatrix4fv(skull_shader->uniform("u_model"), 1, GL_FALSE, glm::value_ptr(*Controller::skulls.model_mat[0]));
@@ -169,19 +178,19 @@ int opengl::scenes::inquisitor_skull() {
 
 
         GLfloat time = (GLfloat)glfwGetTime();
-        GLfloat shift = glm::two_pi<float>() / light_positions.size();
+        GLfloat shift = glm::two_pi<float>() / lighting.size;
 
         skull_shader->use();
 
-        for (std::size_t i = 0; i < light_positions.size(); ++i) {
-            light_positions[i] = glm::vec3(
+
+        for (std::size_t i = 0; i < lighting.size; ++i) {
+            lighting.lights[i].position = glm::vec3(
                 glm::sin(time * .7f + shift * i) * ligth_distance,
                 .4f,
                 glm::cos(time * .7f + shift * i) * ligth_distance
             );
 
-            const auto u_light = "u_light["s + std::to_string(i) + "]"s;
-            glUniform3fv(skull_shader->uniform(u_light + ".position"s), 1, glm::value_ptr(light_positions[i]));
+            glUniform3fv(lighting.lights[i].location, 1, glm::value_ptr(lighting.lights[i].position));
         }
 
         glm::mat4 proj_view = projection * glm::lookAt(Controller::camera.pos, Controller::camera.pos + Controller::camera.front, Controller::camera.up);
@@ -191,15 +200,15 @@ int opengl::scenes::inquisitor_skull() {
 
         Controller::skulls.current_model()->render(*skull_shader);
 
+
         lamp_shader->use();
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        for (std::size_t i = 0; i < light_positions.size(); ++i) {
-            const glm::mat4 model = glm::scale(glm::translate(glm::mat4(), light_positions[i]), glm::vec3(.05f, .05f, .05f));
+        for (const auto& light : lighting.lights) {
+            const glm::mat4 model = glm::scale(glm::translate(glm::mat4(), light.position), glm::vec3(.05f, .05f, .05f));
 
             glUniformMatrix4fv(lamp_shader->uniform("u_proj_view"), 1, GL_FALSE, glm::value_ptr(proj_view));
             glUniformMatrix4fv(lamp_shader->uniform("u_model"), 1, GL_FALSE, glm::value_ptr(model));
-            glUniform3fv(lamp_shader->uniform("u_color"), 1, glm::value_ptr(light_colors[i]));
-
+            glUniform3fv(lamp_shader->uniform("u_color"), 1, glm::value_ptr(light.color));
 
             lamp->render(*lamp_shader);
         }
