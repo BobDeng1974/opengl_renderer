@@ -29,10 +29,12 @@ struct Context {
 
     bool is_failed = false;
 
-    GLfloat last_frame;
+    GLfloat prev_frame, current_frame;
 
 
-    Context(GLint width, GLint height, const std::string& title) : width(width), height(height) {
+    Context(GLint width, GLint height, const std::string& title)
+        : width(width), height(height), window(nullptr), prev_frame(.0f), current_frame(prev_frame)
+    {
         if (!glfwInit()) {
             is_failed = true; return;
         }
@@ -70,7 +72,7 @@ struct Context {
             std::cout << glGetString(GL_VERSION) << std::endl;
         }
 
-        last_frame = (GLfloat)glfwGetTime();
+        prev_frame = (GLfloat)glfwGetTime();
     }
 
     virtual ~Context() {
@@ -102,12 +104,12 @@ struct Context {
         while (!glfwWindowShouldClose(window)) {
             glfwPollEvents();
 
-            GLfloat current_frame = (GLfloat)glfwGetTime();
-            GLfloat dt = current_frame - last_frame;
-            last_frame = current_frame;
+            current_frame = (GLfloat)glfwGetTime();
+            GLfloat dt = current_frame - prev_frame;
 
             loop_callback(dt);
 
+            prev_frame = current_frame;
             glfwSwapBuffers(window);
         }
     }

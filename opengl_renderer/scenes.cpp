@@ -159,19 +159,19 @@ int opengl::scenes::inquisitor_skull() {
     const glm::mat4 projection = glm::perspective(45.f, (GLfloat)context.width / (GLfloat)context.height, .1f, 100.f);
 
 
-    GLfloat last_time = (GLfloat)glfwGetTime();
+    GLfloat last_frame = (GLfloat)glfwGetTime();
     std::size_t frame_count = 0;
 
     GLfloat shift = glm::two_pi<float>() / lighting.size;
 
     context.loop([&](GLfloat dt) {
-        GLfloat current_time = (GLfloat)glfwGetTime();
         ++frame_count;
 
-        if (current_time - last_time >= 1.f) {
+        if (context.current_frame - last_frame >= 1.f) {
             std::cout << '\r' << frame_count << " FPS";
+
             frame_count = 0;
-            last_time = current_time;
+            last_frame = context.current_frame;
         }
 
         Controller::update_camera(dt);
@@ -184,9 +184,9 @@ int opengl::scenes::inquisitor_skull() {
 
         for (std::size_t i = 0; i < lighting.size; ++i) {
             lighting.lights[i].position = glm::vec3(
-                glm::sin(current_time * .7f + shift * i) * ligth_distance,
+                glm::sin(context.current_frame * .7f + shift * i) * ligth_distance,
                 .4f,
-                glm::cos(current_time * .7f + shift * i) * ligth_distance
+                glm::cos(context.current_frame * .7f + shift * i) * ligth_distance
             );
 
             glUniform3fv(lighting.lights[i].location, 1, glm::value_ptr(lighting.lights[i].position));
