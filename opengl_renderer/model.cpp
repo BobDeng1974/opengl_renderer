@@ -12,12 +12,12 @@ namespace opengl {
 Model::Model(const path& path) :
     Model(std::forward<decltype(path)>(path)) {}
 
-Model::Model(path&& path) {
+Model::Model(path&& path) : directory(path.parent_path()) {
     load_model(std::forward<decltype(path)>(path));
 }
 
 void Model::render(const Shader& shader) const {
-    for (auto& mesh : meshes) {
+    for (const auto& mesh : meshes) {
         mesh.render(shader);
     }
 }
@@ -31,8 +31,6 @@ void Model::load_model(path&& path) {
         std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
         return;
     }
-
-    directory = path.parent_path();
 
     process_node(scene->mRootNode, scene);
 }
@@ -116,7 +114,15 @@ Textures Model::load_material(aiMaterial* material, aiTextureType type, texture_
         if (auto&& it = textures.find(str.C_Str()); it == textures.end()) {
             texture.id = load_texture(directory / str.C_Str());
             texture.type = t_type;
-            textures_tmp.push_back(texture);
+            texture.uniform = [&] {
+                switch (t_type) {
+                case texture_type::specular:
+                    return "u_texture_specular_" + std::to_string(specular_n++); break;
+                case texture_type::diffuse: [[fallthrough]];
+                default:
+                    return "u_texture_diffuse_" + std::to_string(diffuse_n++); break;
+                }
+            }();
 
             textures[str.C_Str()] = texture;
         }
@@ -124,7 +130,7 @@ Textures Model::load_material(aiMaterial* material, aiTextureType type, texture_
             texture = it->second;
         }
 
-        textures_tmp.push_back(texture);
+        textures_tmp.push_back(std::move(texture));
     }
 
 

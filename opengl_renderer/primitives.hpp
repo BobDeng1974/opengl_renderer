@@ -27,6 +27,7 @@ enum class texture_type : std::uint8_t {
 struct Texture {
     GLuint id;
     texture_type type;
+    std::string uniform;
 };
 
 

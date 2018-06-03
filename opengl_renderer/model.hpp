@@ -24,7 +24,7 @@ public:
     Model(path&& path);
 
     void render(const Shader& shader) const;
-    path directory;
+    const path directory;
 
 private:
     void load_model(path&& path);
@@ -36,6 +36,9 @@ private:
 
     TextureCache textures;
     Meshes meshes;
+
+    std::size_t diffuse_n = 0;
+    std::size_t specular_n = 0;
 };
 
 GLuint load_texture(const std::experimental::filesystem::path& path);
