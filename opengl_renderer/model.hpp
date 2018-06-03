@@ -20,6 +20,7 @@ class Model {
 public:
     using path = std::experimental::filesystem::path;
 
+    Model(const path& path);
     Model(path&& path);
 
     void render(const Shader& shader) const;

@@ -2,12 +2,15 @@
 
 #include <algorithm>
 #include <iostream>
+#include <utility>
 
 #include "model.hpp"
 
 
 namespace opengl {
 
+Model::Model(const path& path) :
+    Model(std::forward<decltype(path)>(path)) {}
 
 Model::Model(path&& path) {
     load_model(std::forward<decltype(path)>(path));
