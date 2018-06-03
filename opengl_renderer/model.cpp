@@ -114,6 +114,8 @@ Textures Model::load_material(aiMaterial* material, aiTextureType type, texture_
             texture.id = load_texture(directory / str.C_Str());
             texture.type = t_type;
             textures_tmp.push_back(texture);
+
+            textures[str.C_Str()] = texture;
         }
         else {
             texture = it->second;
