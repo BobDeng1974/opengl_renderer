@@ -33,10 +33,10 @@
     <ClCompile Include="skulls.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scenes.cpp">
+    <ClCompile Include="shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cpp">
+    <ClCompile Include="inquisitor_skull.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
