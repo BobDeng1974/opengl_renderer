@@ -145,6 +145,7 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="kings_hall.cpp" />
     <ClCompile Include="inquisitor_skull.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="skulls.cpp" />

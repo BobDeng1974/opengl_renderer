@@ -36,6 +36,7 @@
     <ClCompile Include="shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="kings_hall.cpp">
     <ClCompile Include="inquisitor_skull.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
