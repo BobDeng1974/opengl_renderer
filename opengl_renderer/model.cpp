@@ -52,29 +52,19 @@ Mesh Model::process_mesh(aiMesh* mesh, const aiScene* scene) {
     vertices.reserve(mesh->mNumVertices);
 
     for (std::size_t i = 0; i < mesh->mNumVertices; ++i) {
-        Vertex vertex;
-        glm::vec3 vec;
-
-        vec.x = mesh->mVertices[i].x;
-        vec.y = mesh->mVertices[i].y;
-        vec.z = mesh->mVertices[i].z;
-        vertex.position = vec;
-        
-        vec.x = mesh->mNormals[i].x;
-        vec.y = mesh->mNormals[i].y;
-        vec.z = mesh->mNormals[i].z;
-        vertex.normal = vec;
-
-        if (mesh->HasTextureCoords(0)) {
-            glm::vec2 vec;
-
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.tex_coords = vec;
-        }
-        else {
-            vertex.tex_coords = glm::vec2(0.0f, 0.0f);
-        }
+        const Vertex vertex = { {
+                mesh->mVertices[i].x,
+                mesh->mVertices[i].y,
+                mesh->mVertices[i].z
+            }, {
+                mesh->mNormals[i].x,
+                mesh->mNormals[i].y,
+                mesh->mNormals[i].z
+            },
+            mesh->HasTextureCoords(0)
+            ? glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y)
+            : glm::vec2()
+        };
 
         vertices.push_back(std::move(vertex));
     }
