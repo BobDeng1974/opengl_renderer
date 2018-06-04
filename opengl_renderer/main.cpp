@@ -13,5 +13,5 @@ extern "C" {
 int main() {
     std::ios::sync_with_stdio(false);
 
-    return opengl::scenes::inquisitor_skull();
+    return opengl::scenes::hall();
 }

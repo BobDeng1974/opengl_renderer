@@ -3,6 +3,6 @@
 
 namespace opengl::scenes {
 
-int inquisitor_skull();
+int hall();
 
 } // namespace opengl::scenes

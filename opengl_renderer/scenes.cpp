@@ -37,11 +37,11 @@ namespace gl = opengl;
 using namespace std::string_literals;
 
 
-int opengl::scenes::inquisitor_skull() {
+int opengl::scenes::hall() {
     GLint width = 800;
     GLint height = 600;
 
-    std::string title = "Inquisitor skull";
+    std::string title = "The King's Hall";
 
 
     auto context = gl::Context<gl::release>(width, height, title);
@@ -81,6 +81,11 @@ int opengl::scenes::inquisitor_skull() {
             resources / "shaders" / "fragment_lamp.glsl"
     );
 
+    auto hall_shader = gl::Shader::create<GL_VERTEX_SHADER, GL_FRAGMENT_SHADER>(
+        resources / "shaders" / "vertex_hall.glsl",
+        resources / "shaders" / "fragment_hall.glsl"
+    );
+
     
     auto inquisitor = std::make_unique<gl::Model>(
         resources / "models" / "lord_inquisitor_servo_skull" / "scene.gltf"
@@ -93,6 +98,20 @@ int opengl::scenes::inquisitor_skull() {
     auto lamp = std::make_unique<gl::Model>(
         resources / "models" / "truncated_octahedron" / "scene.gltf"
     );
+
+    auto hall = std::make_unique<gl::Model>(
+        resources / "models" / "the_king_s_hall" / "scene.gltf"
+    );
+
+
+    glm::mat4 hall_model_mat = glm::scale(glm::rotate(glm::translate(glm::mat4(),
+        glm::vec3(.0f, -.5f, -12.f)), // translate
+        glm::radians(-90.f), glm::vec3(1.f, .0f, .0f)), // rotate
+        glm::vec3(.7f, .7f, .7f) // scale
+    );
+
+    hall_shader->use();
+    glUniformMatrix4fv(hall_shader->uniform("u_model"), 1, GL_FALSE, glm::value_ptr(hall_model_mat));
 
 
     skull_shader->use();
@@ -164,6 +183,7 @@ int opengl::scenes::inquisitor_skull() {
 
     GLfloat shift = glm::two_pi<float>() / lighting.size;
 
+
     context.loop([&](GLfloat dt) {
         ++frame_count;
 
@@ -176,7 +196,7 @@ int opengl::scenes::inquisitor_skull() {
 
         Controller::update_camera(dt);
 
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClearColor(1.f, 1.f, 1.f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -198,6 +218,11 @@ int opengl::scenes::inquisitor_skull() {
         glUniform3fv(skull_shader->uniform("u_view_pos"), 1, glm::value_ptr(Controller::camera.pos));
 
         Controller::skulls.current_model()->render(*skull_shader);
+
+
+        hall_shader->use();
+        glUniformMatrix4fv(hall_shader->uniform("u_proj_view"), 1, GL_FALSE, glm::value_ptr(proj_view));
+        hall->render(*hall_shader);
 
 
         lamp_shader->use();
