@@ -3,6 +3,6 @@
 
 namespace opengl::scenes {
 
-int hall();
+int kings_hall();
 
 } // namespace opengl::scenes

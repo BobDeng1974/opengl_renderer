@@ -37,7 +37,7 @@ namespace gl = opengl;
 using namespace std::string_literals;
 
 
-int opengl::scenes::hall() {
+int opengl::scenes::kings_hall() {
     GLint width = 800;
     GLint height = 600;
 
