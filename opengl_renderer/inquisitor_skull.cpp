@@ -61,6 +61,9 @@ int opengl::scenes::inquisitor_skull() {
     glfwGetCursorPos(context.window, &Controller::cursor.x, &Controller::cursor.y);
     glfwSetCursorPosCallback(context.window, Controller::mouse_callback);
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
 
     Controller::camera = {
         glm::vec3(.0f, .0f,  3.0f),
