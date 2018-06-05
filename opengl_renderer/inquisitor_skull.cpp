@@ -163,11 +163,8 @@ int opengl::scenes::inquisitor_skull() {
 
     const glm::mat4 projection = glm::perspective(45.f, (GLfloat)context.width / (GLfloat)context.height, .1f, 100.f);
 
-
-    GLfloat last_frame = (GLfloat)glfwGetTime();
-    std::size_t frame_count = 0;
-
     GLfloat shift = glm::two_pi<float>() / lighting.size;
+
 
     context.loop([&](GLfloat dt) {
         Controller::update_camera(dt);
