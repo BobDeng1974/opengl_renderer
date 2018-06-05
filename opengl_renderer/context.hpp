@@ -80,10 +80,7 @@ struct Context {
     }
 
 
-    template <
-        class Callback,
-        class = std::enable_if<is_debug>
-    >
+    template <class Callback>
     void set_debug_callback(Callback message_callback) {
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(message_callback, nullptr);
@@ -105,7 +102,7 @@ struct Context {
             if constexpr (is_debug) {
                 static struct {
                     std::size_t frame_count = 0;
-                    GLfloat last_frame = current_frame;
+                    GLfloat last_frame = .0f;
                 } fps;
 
                 ++fps.frame_count;

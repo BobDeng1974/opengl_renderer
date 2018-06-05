@@ -43,14 +43,16 @@ int opengl::scenes::kings_hall() {
 
     std::string title = "The King's Hall";
 
+    using build = gl::debug;
 
-    auto context = gl::Context<gl::release>(width, height, title);
+
+    auto context = gl::Context<build>(width, height, title);
 
     if (context.is_failed) {
         return -1;
     }
 
-    if constexpr (_debug) {
+    if constexpr (context.is_debug) {
         context.set_debug_callback(gl::gl_debug_message_callback);
     }
 
