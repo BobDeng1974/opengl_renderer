@@ -168,15 +168,6 @@ int opengl::scenes::inquisitor_skull() {
     GLfloat shift = glm::two_pi<float>() / lighting.size;
 
     context.loop([&](GLfloat dt) {
-        ++frame_count;
-
-        if (context.current_frame - last_frame >= 1.f) {
-            std::cout << '\r' << frame_count << " FPS";
-
-            frame_count = 0;
-            last_frame = context.current_frame;
-        }
-
         Controller::update_camera(dt);
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);

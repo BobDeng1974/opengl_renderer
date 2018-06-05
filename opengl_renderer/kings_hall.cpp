@@ -188,15 +188,6 @@ int opengl::scenes::kings_hall() {
 
 
     context.loop([&](GLfloat dt) {
-        ++frame_count;
-
-        if (context.current_frame - last_frame >= 1.f) {
-            std::cout << '\r' << frame_count << " FPS";
-
-            frame_count = 0;
-            last_frame = context.current_frame;
-        }
-
         Controller::update_camera(dt);
 
         glClearColor(1.f, 1.f, 1.f, 1.f);

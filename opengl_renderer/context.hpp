@@ -102,6 +102,21 @@ struct Context {
 
     void loop(std::function<void(GLfloat)> loop_callback) {
         while (!glfwWindowShouldClose(window)) {
+            if constexpr (is_debug) {
+                static struct {
+                    std::size_t frame_count = 0;
+                    GLfloat last_frame = current_frame;
+                } fps;
+
+                ++fps.frame_count;
+
+                if (current_frame - fps.last_frame >= 1.f) {
+                    std::cout << '\r' << fps.frame_count << " FPS";
+
+                    fps = { 0, current_frame };
+                }
+            }
+
             glfwPollEvents();
 
             current_frame = (GLfloat)glfwGetTime();
