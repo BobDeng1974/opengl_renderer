@@ -76,7 +76,7 @@ int opengl::scenes::kings_hall() {
 
     const fs::path resources = "resources";
 
-    auto skull_shader = gl::Shader::create<GL_VERTEX_SHADER, GL_FRAGMENT_SHADER>(
+    std::shared_ptr<Shader> skull_shader = gl::Shader::create<GL_VERTEX_SHADER, GL_FRAGMENT_SHADER>(
             resources / "shaders" / "vertex.glsl",
             resources / "shaders" / "fragment.glsl"
     );

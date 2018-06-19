@@ -23,7 +23,7 @@ public:
     static auto create(Shaders&&... shader_paths) {
         GLuint program = compile_shaders<Types...>(std::forward<Shaders>(shader_paths)...);
 
-        return std::make_shared<Shader>(program);
+        return std::make_unique<Shader>(program);
     }
 
 
